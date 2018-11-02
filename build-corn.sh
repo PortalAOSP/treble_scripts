@@ -288,7 +288,11 @@ function clone_or_checkout() {
             git checkout origin/"$localManifestBranch"
         )
     else
-        git clone https://github.com/phhusson/"$repo" "$dir" -b "$localManifestBranch"
+        if [[ "$repo" = "treble_manifest" ]];then
+            git clone https://github.com/pornypie/"$repo" "$dir" -b "$localManifestBranch"
+	else
+	    git clone https://github.com/phhusson/"$repo" "$dir" -b "$localManifestBranch"
+	fi
     fi
 }
 
