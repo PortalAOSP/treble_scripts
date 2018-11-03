@@ -284,4 +284,5 @@ jack_env
 
 for (( idx=0; idx < ${#variant_codes[*]}; idx++ )); do
     build_variant "${variant_codes[$idx]}" "${variant_names[$idx]}"
+    pdup release/"$rom_fp"/system-"${variant_names[$idx]}".img
 done
