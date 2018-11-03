@@ -1,6 +1,8 @@
 #!/bin/bash
 set -e
 
+PDSERVER="https://sia.pixeldrain.com"
+
 if [ -z "$USER" ];then
     export USER="$(id -un)"
 fi
@@ -219,6 +221,20 @@ function patch_things() {
         bash "$(dirname "$0")"/list-patches.sh
         cp patches.zip release/"$rom_fp"/patches.zip
     fi
+}
+
+function pdup() {
+for FILE in "$@"
+do
+	FILENAME="${FILE##*/}"
+
+	echo "Uploading $FILENAME ... "
+	RESPONSE=$(curl -# -F "fileName=$FILENAME" -F "file=@$FILE" $PDSERVER/api/file)
+	FILEID=$(echo $RESPONSE | grep -Po '(?<="id":")[^"]*')
+
+	SUCC="ROM build from $(whoami)@$(hostname) from dir $(pwd) uploaded at: $PDSERVER/api/file/$FILEID"
+	curl -F chat_id="$CHANNEL_ID" -F text="$SUCC" -F parse_mode="HTML" -F disable_web_page_preview="true" https://api.telegram.org/bot$BOT_TOKEN/sendMessage
+done
 }
 
 function build_variant() {
